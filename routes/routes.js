@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('./../db_connection');
-const authMiddleware = require('./../middlewares/auth');
+const auth = require('./../middlewares/auth');
 
 
 router.get('/', (req, res) => {
@@ -13,8 +13,8 @@ router.get('/', (req, res) => {
     res.render('index', data)
 })
 
-router.get('/dashboard', authMiddleware, (req, res) => {
-    if (req.isAuthenticated) { // Använd req.isAuthenticated direkt
+router.get('/dashboard', auth, (req, res) => {
+    if (req.isAuthenticated) {
         // If the user is authenticated
         const username = req.session.username;
         const data = {
@@ -27,7 +27,6 @@ router.get('/dashboard', authMiddleware, (req, res) => {
         res.redirect('/login');
     }
 })
-
 
 router.get('/logout', (req, res) => {
     if (req.session.authenticated && req.session.username) {
@@ -66,24 +65,23 @@ router.post('/login', (req, res) => {
         }
     });
 });
-
 //PROFILE
-router.get("/profile", authMiddleware, (req, res) => {
-    if (req.isAuthenticated) {
-        res.render('profile')
-      const username = req.session.username;
-      const email = req.session.email;
-      const data = {
+router.get('/profile', (req, res) => {
+
+    const username = req.session.username;
+    const email = req.session.email;
+
+
+    const data = {
         name: username,
         email: email,
-        style: "color: red;",
-      };
-      res.render("profile", data);
-    } else {
-      res.redirect("/login");
-    }
-  });
+        message: req.flash('message')
+    };
 
+    console.log(data.name, data.email)
+
+    res.render('profile', data)
+});
 
 // SIGN UP
 router.get('/signup', (req, res) => {

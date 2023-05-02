@@ -36,15 +36,17 @@ router.get('/posts/create', auth, (req, res) => {
     }
 })
 
+
 router.post('/posts', async (req, res) => {
     try {
         const title = req.body.title;
         const content = req.body.content;
         const slug = slugify(title);
-        const post = new Post({title, slug, content})
+        const post = new Post({ title, slug, content })
         await post.create();
 
         res.redirect('/posts')
+
     } catch (err) {
         res.send(err)
     }
@@ -69,7 +71,6 @@ router.get('/posts/slug/:slug', async (req, res) => {
         });
     }
 })
-
 
 // UPDATE
 
