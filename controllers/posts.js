@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const slugify = require('slugify');
+const auth = require('./../middlewares/auth');
 
 const Post = require('./../models/posts');
 
@@ -21,8 +22,18 @@ router.get('/posts', async (req, res) => {
 
 
 // CREATE
-router.get('/posts/create', (req, res) => {
-    res.render('posts/create')
+router.get('/posts/create', auth, (req, res) => {
+    if (req.isAuthenticated) {
+        const username = req.session.username;
+        const data = {
+            name: username,
+            style: "color: red;",
+            message: req.flash('message')
+        }
+        res.render('posts/create', data)
+    } else {
+        res.redirect('/login');
+    }
 })
 
 router.post('/posts', async (req, res) => {
