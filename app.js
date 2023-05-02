@@ -39,6 +39,9 @@ const posts = require('./controllers/posts');
 app.use(posts);
 
 
+const api = require('./api/endpoints.js')
+app.use(api)
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
