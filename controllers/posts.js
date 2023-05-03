@@ -20,7 +20,6 @@ router.get('/posts', async (req, res) => {
     }
 });
 
-
 // CREATE
 router.get('/posts/create', auth, (req, res) => {
     if (req.isAuthenticated) {
@@ -35,7 +34,6 @@ router.get('/posts/create', auth, (req, res) => {
         res.redirect('/login');
     }
 })
-
 
 router.post('/posts', async (req, res) => {
     try {
@@ -65,28 +63,54 @@ router.get('/posts/slug/:slug', async (req, res) => {
         res.render('posts/show', {
             post: post
         })
-    } catch (err) {
+    } catch
+    (err) {
         res.status(500).json({
             message: err.message
         });
     }
 })
 
-// UPDATE
-
-// DELETE
 
 
+// Handle comments
+const Comment = require('./../models/comments');
 
-// // Get a specific post
-// router.get('/posts:id', async (req, res) => {
-//   try {
-//     const post = await Post.getById(req.params.id);
-//     res.json(post);
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// });
+router.post('/posts/comments', async (req, res) => {
+    console.log(req.body); // Lägg till detta för att se inkommande begärans kropp
+
+    try {
+        const slug = req.body.slug;
+        const content = req.body.content;
+
+        // Hämta posten baserat på slug
+        const [post] = await Post.getBySlug(slug);
+
+        // Skapa en ny kommentar och länka den till posten
+        const comment = new Comment({ content, post_id: post.id });
+        await comment.create();
+
+        // Om allt går bra, omdirigera användaren tillbaka till posten
+        res.redirect('/posts/slug/' + slug);
+
+    } catch (err) {
+        res.status(500).json({
+            message: err.message
+        });
+    }
+});
+
+
+
+// Get a specific post
+router.get('/posts:id', async (req, res) => {
+  try {
+    const post = await Post.getById(req.params.id);
+    res.json(post);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // // Update a post
 // router.put('/posts:id', async (req, res) => {
@@ -111,8 +135,5 @@ router.get('/posts/slug/:slug', async (req, res) => {
 //     res.status(500).json({ message: err.message });
 //   }
 // });
-
-
-
 
 module.exports = router;

@@ -23,9 +23,14 @@
             <div class="p-6">
                 <h1 class="text-lg">Kommentera <%= post.title %></h1>
 
-                <form action="">
-                    <input type="hidden" name="postId" value="<%= post.id %>">
-                    <textarea name="" id="" class="mt-4 w-full p-5 border-0 bg-slate-100 rounded text-sm"></textarea>
+                <form class="" action="/posts/comments" method="post">
+                    <input type="hidden" name="slug" value="<%= post.slug %>">
+
+                    <div class="flex flex-col space-y-4">
+                        <!-- <input class="p-5 border-0 bg-slate-100 rounded" type="text" name="title" placeholder="Titel"> -->
+                        <textarea class="p-5 border-0 bg-slate-100 rounded" name="content" id="" cols="30" rows="10" placeholder="Ditt inlägg"></textarea>
+                        <button class="bg-blue-400 text-white py-4" type="submit">Skicka</button>
+                    </div>
                 </form>
             </div>
         </div>
