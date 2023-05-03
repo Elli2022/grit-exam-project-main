@@ -1,5 +1,6 @@
 <!-- views/posts/show.ejs -->
 
+
 <%- include('./../partials/head', {title: post.title}); %>
 
 
@@ -34,6 +35,13 @@
                 </form>
             </div>
         </div>
+        <div class="w-full">
+            <% comments.map(comment => { %>
+                <h1><%= comment.content %></h1>
+            <% }); %>
+        </div>
+                            
+        
     </section>
 </div>
 

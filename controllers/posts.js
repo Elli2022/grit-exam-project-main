@@ -5,6 +5,8 @@ const auth = require('./../middlewares/auth');
 
 const Post = require('./../models/posts');
 
+
+
 // Get all posts
 router.get('/posts', async (req, res) => {
     try {
@@ -41,6 +43,7 @@ router.post('/posts', async (req, res) => {
         const content = req.body.content;
         const slug = slugify(title);
         const post = new Post({ title, slug, content })
+        
         await post.create();
 
         res.redirect('/posts')
@@ -51,6 +54,7 @@ router.post('/posts', async (req, res) => {
 })
 
 // READ
+// READ
 router.get('/posts/slug/:slug', async (req, res) => {
     const slug = req.params.slug;
 
@@ -59,9 +63,12 @@ router.get('/posts/slug/:slug', async (req, res) => {
 
         // VG TODO
         // Get Comments
+        const comments = await Comment.getAllCommentsForPostBySlug(post.id);
+       
 
         res.render('posts/show', {
-            post: post
+            post: post,
+            comments: comments  // <-- Change this line
         })
     } catch
     (err) {
@@ -70,6 +77,7 @@ router.get('/posts/slug/:slug', async (req, res) => {
         });
     }
 })
+
 
 
 
